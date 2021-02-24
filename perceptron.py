@@ -8,11 +8,16 @@ x is the test data
 
 w is the weight vector
 
-bias is the offset or threshold. don't set this if 
+bias is the offset or threshold. No need to set this if you used the
+learning() function
 
 returns: 1 for class 1 and -1 for class 2
 """
 def activation(x, w, bias=0):
+	x=prepend_test_feature(x)
+	print("\n\n")
+	print(str(x))
+	print(str(w))
 	if(np.dot(x,w)-bias>0):
 		return 1
 	return -1
@@ -34,6 +39,7 @@ step size is a constant used for updating the weights
 returns: weight vector to use as input on activation function
 """
 def learning(x, y, limit, step_size, bias=0):
+	x=prepend_trng_feature(x)
 	if x.ndim > 1:
 		w=np.zeros(x.shape[1])
 	else:
@@ -62,15 +68,24 @@ def learning(x, y, limit, step_size, bias=0):
 
 
 """
-this is used to prepend a column of 1s to avoid using a
-separate bias. 
+this is used to prepend a column of 1s to the training set
+in order to to avoid using a separate bias. 
+
+only use this on the training data
 
 x is the input data in the form of a numpy array. 
 Can be either 1D or 2D. if 1D this function will convert it
 """
-def prepend_feature(x):
+def prepend_trng_feature(x):
 	a=np.ones((x.shape[0],1))
+	print(str(x.ndim)+ " dimensions")
 	if x.ndim > 1:
 		return np.hstack((a,x))
 	else:
 		return np.hstack((a,np.array(x)[np.newaxis].T))
+
+def prepend_test_feature(x):
+	return np.insert(x, 0, 1.,axis=0)
+
+
+
